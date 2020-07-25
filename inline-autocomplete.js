@@ -109,19 +109,16 @@ const InlineAutocomplete = {
         }
       },
       insertAtCaretPos: (textareaElement, inputStr) => {
-        let start;
-        let end;
-        let position;
-        let mozScrollFix = textareaElement.scrollTop == undefined ? 0 : textareaElement.scrollTop;
+        const mozScrollFix = textareaElement.scrollTop == undefined ? 0 : textareaElement.scrollTop;
         textareaElement.focus();
 
         if (
           typeof textareaElement.selectionStart == 'number' &&
           textareaElement.selectionStart == textareaElement.selectionEnd
         ) {
-          position = textareaElement.selectionStart + inputStr.length;
-          start = textareaElement.selectionStart;
-          end = textareaElement.selectionEnd;
+          const position = textareaElement.selectionStart + inputStr.length;
+          const start = textareaElement.selectionStart;
+          const end = textareaElement.selectionEnd;
           textareaElement.value = textareaElement.value.substr(0, start) + inputStr + textareaElement.value.substr(end);
           textareaElement.setSelectionRange(position, position);
           textareaElement.scrollTop = mozScrollFix;
@@ -137,12 +134,12 @@ const InlineAutocomplete = {
 
     /* Internal method: get the chunk of text before the cursor */
     currentArea.getChunk = function () {
-      var delimiters = this.options.delimiters.split(''), // array of chars
-        textBeforeCursor = this.value.substr(0, textareaUtil.getSelection(this).start),
-        indexOfDelimiter = -1,
-        i,
-        d,
-        idx;
+      const delimiters = this.options.delimiters.split(''); // array of chars
+      const textBeforeCursor = this.value.substr(0, textareaUtil.getSelection(this).start);
+      let indexOfDelimiter = -1;
+      let i;
+      let d;
+      let idx;
       for (i = 0; i < delimiters.length; i++) {
         d = delimiters[i];
         idx = textBeforeCursor.lastIndexOf(d);
@@ -161,13 +158,13 @@ const InlineAutocomplete = {
      * If performCycle is true then analyze getChunk() and and getSelection()
      */
     currentArea.getCompletion = function (performCycle) {
-      var text = this.getChunk(),
-        selectionText = textareaUtil.getSelection(this).text,
-        suggests = this.suggests,
-        foundAlreadySelectedValue = false,
-        firstMatchedValue = null,
-        i,
-        suggest;
+      let text = this.getChunk();
+      let selectionText = textareaUtil.getSelection(this).text;
+      let suggests = this.suggests;
+      let foundAlreadySelectedValue = false;
+      let firstMatchedValue = null;
+      let i;
+      let suggest;
       // search the variant
       for (i = 0; i < suggests.length; i++) {
         suggest = suggests[i];
@@ -199,8 +196,8 @@ const InlineAutocomplete = {
 
     currentArea.updateSelection = function (completion) {
       if (completion) {
-        var _selectionStart = textareaUtil.getSelection(currentArea).start,
-          _selectionEnd = _selectionStart + completion.length;
+        const _selectionStart = textareaUtil.getSelection(currentArea).start;
+        const _selectionEnd = _selectionStart + completion.length;
         if (textareaUtil.getSelection(currentArea).text === '') {
           textareaUtil.insertAtCaretPos(currentArea, completion);
         } else {
@@ -213,7 +210,7 @@ const InlineAutocomplete = {
     const onKeydown = function (e) {
       if (e.keyCode === InlineAutocomplete.Keys.TAB) {
         if (currentArea.options.cycleOnTab) {
-          var chunk = currentArea.getChunk();
+          const chunk = currentArea.getChunk();
           if (chunk.length >= currentArea.options.minChunkSize) {
             currentArea.updateSelection(currentArea.getCompletion(true));
           }
@@ -229,8 +226,8 @@ const InlineAutocomplete = {
         currentArea.options.stopSuggestionKeys.indexOf(e.keyCode) !== -1
       ) {
         // apply suggestion. Clean up selection and insert a space
-        var _selectionEnd = textareaUtil.getSelection(currentArea).end + currentArea.options.endingSymbols.length;
-        var _text = textareaUtil.getSelection(currentArea).text + currentArea.options.endingSymbols;
+        const _selectionEnd = textareaUtil.getSelection(currentArea).end + currentArea.options.endingSymbols.length;
+        const _text = textareaUtil.getSelection(currentArea).text + currentArea.options.endingSymbols;
         textareaUtil.replaceSelection(currentArea, _text);
         textareaUtil.setSelection(currentArea, _selectionEnd, _selectionEnd);
         e.preventDefault();
@@ -243,7 +240,7 @@ const InlineAutocomplete = {
     currentArea.removeEventListener('keydown', onKeydown);
     currentArea.addEventListener('keydown', onKeydown);
     const onKeyup = function (e) {
-      var hasSpecialKeys = e.altKey || e.metaKey || e.ctrlKey,
+      const hasSpecialKeys = e.altKey || e.metaKey || e.ctrlKey,
         hasSpecialKeysOrShift = hasSpecialKeys || e.shiftKey;
       switch (e.keyCode) {
         case InlineAutocomplete.Keys.UNKNOWN: // Special key released
@@ -267,7 +264,7 @@ const InlineAutocomplete = {
           break;
         default:
           if (!hasSpecialKeys && currentArea.options.autoComplete) {
-            var chunk = currentArea.getChunk();
+            const chunk = currentArea.getChunk();
             if (chunk.length >= currentArea.options.minChunkSize) {
               currentArea.updateSelection(currentArea.getCompletion(false));
             }
