@@ -72,7 +72,7 @@
     /* Internal method: get the chunk of text before the cursor */
     $area.getChunk = function () {
       var delimiters = this.options.delimiters.split(''), // array of chars
-        textBeforeCursor = this.val().substr(0, this.getSelection().start),
+        textBeforeCursor = this.val().substr(0, textareaUtil.getSelection(this[0]).start),
         indexOfDelimiter = -1,
         i,
         d,
@@ -96,7 +96,7 @@
      */
     $area.getCompletion = function (performCycle) {
       var text = this.getChunk(),
-        selectionText = this.getSelection().text,
+        selectionText = textareaUtil.getSelection(this[0]).text,
         suggests = this.suggests,
         foundAlreadySelectedValue = false,
         firstMatchedValue = null,
@@ -133,14 +133,14 @@
 
     $area.updateSelection = function (completion) {
       if (completion) {
-        var _selectionStart = $area.getSelection().start,
+        var _selectionStart = textareaUtil.getSelection($area[0]).start,
           _selectionEnd = _selectionStart + completion.length;
-        if ($area.getSelection().text === '') {
-          $area.insertAtCaretPos(completion);
+        if (textareaUtil.getSelection($area[0]).text === '') {
+          textareaUtil.insertAtCaretPos($area[0], completion);
         } else {
-          $area.replaceSelection(completion);
+          textareaUtil.replaceSelection($area[0], completion);
         }
-        $area.setSelection(_selectionStart, _selectionEnd);
+        textareaUtil.setSelection($area[0], _selectionStart, _selectionEnd);
       }
     };
 
@@ -159,12 +159,12 @@
         }
       }
       // Check for conditions to stop suggestion
-      if ($area.getSelection().length && $.inArray(e.keyCode, $area.options.stopSuggestionKeys) !== -1) {
+      if (textareaUtil.getSelection($area[0]).length && $.inArray(e.keyCode, $area.options.stopSuggestionKeys) !== -1) {
         // apply suggestion. Clean up selection and insert a space
-        var _selectionEnd = $area.getSelection().end + $area.options.endingSymbols.length;
-        var _text = $area.getSelection().text + $area.options.endingSymbols;
-        $area.replaceSelection(_text);
-        $area.setSelection(_selectionEnd, _selectionEnd);
+        var _selectionEnd = textareaUtil.getSelection($area[0]).end + $area.options.endingSymbols.length;
+        var _text = textareaUtil.getSelection($area[0]).text + $area.options.endingSymbols;
+        textareaUtil.replaceSelection($area[0], _text);
+        textareaUtil.setSelection($area[0], _selectionEnd, _selectionEnd);
         e.preventDefault();
         e.stopPropagation();
         this.focus();
@@ -193,7 +193,7 @@
         case KEY.LEFT:
         case KEY.RIGHT:
           if (!hasSpecialKeysOrShift && $area.options.autoComplete) {
-            $area.replaceSelection('');
+            textareaUtil.replaceSelection($area[0], '');
           }
           break;
         default:
