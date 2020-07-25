@@ -25,17 +25,12 @@ const textareaUtil = {
     return [textareaElement];
   },
 
-  setSelection: function (textareaElement, startPosition, endPosition) {
+  setSelection: (textareaElement, startPosition, endPosition) => {
     startPosition = parseInt(startPosition);
     endPosition = parseInt(endPosition);
 
     textareaElement.focus();
-    if (typeof textareaElement.selectionStart != 'number') {
-      re = textareaElement.createTextRange();
-      if (re.text.length < endPosition) {
-        endPosition = re.text.length + 1;
-      }
-    }
+
     if (endPosition < startPosition) {
       return [textareaElement];
     }
@@ -83,105 +78,16 @@ const textareaUtil = {
       return [textareaElement];
     }
   },
-};
-
-jQuery.fn.extend({
-  // insert text at current caret position
-  insertAtCaretPos: function (inputStr) {
-    const textareaElement = this[0];
+  insertAtCaretPos: (textareaElement, inputStr) => {
     let start;
     let end;
     let position;
-    let s;
-    let re;
-    let rc;
-    let point;
-    let minus = 0;
-    let number = 0;
     let mozScrollFix = textareaElement.scrollTop == undefined ? 0 : textareaElement.scrollTop;
     textareaElement.focus();
-    if (document.selection && typeof textareaElement.selectionStart != 'number') {
-      if (textareaElement.value.match(/\n/g) != null) {
-        number = textareaElement.value.match(/\n/g).length; // number of EOL symbols
-      }
-      point = parseInt(caretPositionAmp);
-      if (number > 0) {
-        for (let i = 0; i <= number; i++) {
-          let w = textareaElement.value.indexOf('\n', position);
-          if (w != -1 && w <= point) {
-            position = w + 1;
-            point = point - 1;
-            minus++;
-          }
-        }
-      }
-    }
+
     caretPositionAmp = parseInt(caretPositionAmp);
 
-    if (document.selection && typeof textareaElement.selectionStart != 'number') {
-      s = document.selection.createRange();
-      if (s.text.length != 0) {
-        return [textareaElement];
-      }
-      re = textareaElement.createTextRange();
-      textLength = re.text.length;
-      rc = re.duplicate();
-      re.moveToBookmark(s.getBookmark());
-      rc.setEndPoint('EndToStart', re);
-      start = rc.text.length;
-      if (caretPositionAmp > 0 && start == 0) {
-        minus = caretPositionAmp - minus;
-        re.move('character', minus);
-        re.select();
-        s = document.selection.createRange();
-        caretPositionAmp += inputStr.length;
-      } else if (!(caretPositionAmp >= 0) && textLength == 0) {
-        s = document.selection.createRange();
-        caretPositionAmp = inputStr.length + textLength;
-      } else if (!(caretPositionAmp >= 0) && start == 0) {
-        re.move('character', textLength);
-        re.select();
-        s = document.selection.createRange();
-        caretPositionAmp = inputStr.length + textLength;
-      } else if (!(caretPositionAmp >= 0) && start > 0) {
-        re.move('character', 0);
-        document.selection.empty();
-        re.select();
-        s = document.selection.createRange();
-        caretPositionAmp = start + inputStr.length;
-      } else if (caretPositionAmp >= 0 && caretPositionAmp == textLength) {
-        if (textLength != 0) {
-          re.move('character', textLength);
-          re.select();
-        } else {
-          re.move('character', 0);
-        }
-        s = document.selection.createRange();
-        caretPositionAmp = inputStr.length + textLength;
-      } else if (caretPositionAmp >= 0 && start != 0 && caretPositionAmp >= start) {
-        minus = caretPositionAmp - start;
-        re.move('character', minus);
-        document.selection.empty();
-        re.select();
-        s = document.selection.createRange();
-        caretPositionAmp = caretPositionAmp + inputStr.length;
-      } else if (caretPositionAmp >= 0 && start != 0 && caretPositionAmp < start) {
-        re.move('character', 0);
-        document.selection.empty();
-        re.select();
-        s = document.selection.createRange();
-        caretPositionAmp = caretPositionAmp + inputStr.length;
-      } else {
-        document.selection.empty();
-        re.select();
-        s = document.selection.createRange();
-        caretPositionAmp = caretPositionAmp + inputStr.length;
-      }
-      s.text = inputStr;
-      textareaElement.focus();
-
-      return [textareaElement];
-    } else if (
+    if (
       typeof textareaElement.selectionStart == 'number' && // MOZILLA support
       textareaElement.selectionStart == textareaElement.selectionEnd
     ) {
@@ -195,7 +101,9 @@ jQuery.fn.extend({
     }
     return [textareaElement];
   },
+};
 
+jQuery.fn.extend({
   // Set caret position
   setCaretPos: function (inputStr) {
     const textareaElement = this[0];
@@ -230,23 +138,7 @@ jQuery.fn.extend({
       }
     } else if (parseInt(inputStr) < 0) {
       inputStr = parseInt(inputStr) + 1;
-      if (document.selection && typeof textareaElement.selectionStart != 'number') {
-        inputStr = textareaElement.value.length + parseInt(inputStr);
-        if (textareaElement.value.match(/\n/g) != null) {
-          number = textareaElement.value.match(/\n/g).length; // number of EOL symbols
-        }
-        if (number > 0) {
-          for (let i = 0; i <= number; i++) {
-            w = textareaElement.value.indexOf('\n', position);
-            if (w != -1 && w <= inputStr) {
-              position = w + 1;
-              inputStr = parseInt(inputStr) - 1;
-              minus += 1;
-            }
-          }
-          inputStr = inputStr + minus - number;
-        }
-      } else if (document.selection && typeof textareaElement.selectionStart == 'number') {
+      if (document.selection && typeof textareaElement.selectionStart == 'number') {
         inputStr = textareaElement.value.length + parseInt(inputStr);
         if (textareaElement.value.match(/\n/g) != null) {
           number = textareaElement.value.match(/\n/g).length; // number of EOL symbols

@@ -136,7 +136,7 @@
         var _selectionStart = textareaUtil.getSelection($area[0]).start,
           _selectionEnd = _selectionStart + completion.length;
         if (textareaUtil.getSelection($area[0]).text === '') {
-          $area.insertAtCaretPos(completion);
+          textareaUtil.insertAtCaretPos($area[0], completion);
         } else {
           textareaUtil.replaceSelection($area[0], completion);
         }
