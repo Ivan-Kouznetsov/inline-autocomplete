@@ -14,4 +14,5 @@ A library to facilitate in-place/inline autocomplete suggestions for text applic
 > jQuery textarea suggest plugin
 > Copyright (c) 2009-2010 Roman Imankulov
 > Dual licensed under the MIT and GPL licenses:
-> http://www.opensource.org/licenses/mit-license.php > http://www.gnu.org/licenses/gpl.html
+> http://www.opensource.org/licenses/mit-license.php
+> http://www.gnu.org/licenses/gpl.html
