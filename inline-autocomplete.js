@@ -24,7 +24,7 @@ const InlineAutocomplete = {
     options = {
       delimiters: '\n ',
       minChunkSize: 1,
-      cycleOnTab: true,
+      cycleOnTab: false,
       autoComplete: true,
       endingSymbols: ' ',
       stopSuggestionKeys: [InlineAutocomplete.Keys.RETURN, InlineAutocomplete.Keys.SPACE],
@@ -51,9 +51,7 @@ const InlineAutocomplete = {
           const position = start + inputStr.length;
           textareaElement.setSelectionRange(position, position);
           textareaElement.scrollTop = mozScrollFix;
-          return [textareaElement];
         }
-        return [textareaElement];
       },
 
       setSelection: (textareaElement, startPositionStr, endPositionStr) => {
@@ -63,7 +61,6 @@ const InlineAutocomplete = {
         textareaElement.focus();
 
         if (endPosition < startPosition) {
-          return [textareaElement];
         }
         if (document.selection) {
           let number = 0;
@@ -97,15 +94,12 @@ const InlineAutocomplete = {
             endPosition = endPosition + plusEnd;
             textareaElement.selectionStart = startPosition;
             textareaElement.selectionEnd = endPosition;
-            return [textareaElement];
           } else {
-            return [textareaElement];
           }
         } else if (textareaElement.selectionStart) {
           textareaElement.focus();
           textareaElement.selectionStart = startPosition;
           textareaElement.selectionEnd = endPosition;
-          return [textareaElement];
         }
       },
       insertAtCaretPos: (textareaElement, inputStr) => {
@@ -122,9 +116,7 @@ const InlineAutocomplete = {
           textareaElement.value = textareaElement.value.substr(0, start) + inputStr + textareaElement.value.substr(end);
           textareaElement.setSelectionRange(position, position);
           textareaElement.scrollTop = mozScrollFix;
-          return [textareaElement];
         }
-        return [textareaElement];
       },
     };
 
@@ -214,11 +206,20 @@ const InlineAutocomplete = {
           if (chunk.length >= currentArea.options.minChunkSize) {
             currentArea.updateSelection(currentArea.getCompletion(true));
           }
-          e.preventDefault();
-          e.stopPropagation();
+        } else {
+          const startPosition = currentArea.selectionStart;
+          const tabSpaces = '    ';
+          currentArea.value =
+            currentArea.value.substring(0, currentArea.selectionStart) +
+            tabSpaces +
+            currentArea.value.substr(currentArea.selectionEnd);
           currentArea.focus();
-          return false;
+          currentArea.selectionEnd = startPosition + tabSpaces.length;
         }
+        e.preventDefault();
+        e.stopPropagation();
+        currentArea.focus();
+        return false;
       }
       // Check for conditions to stop suggestion
       if (
