@@ -1,23 +1,15 @@
 let caretPositionAmp;
 
+const textareaUtil = {
+  getSelection: (textareaElement) => ({
+    start: textareaElement.selectionStart,
+    end: textareaElement.selectionEnd,
+    text: textareaElement.value.substring(textareaElement.selectionStart, textareaElement.selectionEnd),
+    length: textareaElement.selectionEnd - textareaElement.selectionStart,
+  }),
+};
+
 jQuery.fn.extend({
-  getSelection: function () {
-    // function for getting selection, and position of the selected text
-    const textareaElement = this[0];
-    let start;
-    let end;
-    let part;
-
-    if (typeof textareaElement.selectionStart == 'number') {
-      start = textareaElement.selectionStart;
-      end = textareaElement.selectionEnd;
-      part = textareaElement.value.substring(textareaElement.selectionStart, textareaElement.selectionEnd);
-      return { start: start, end: end, text: part, length: end - start };
-    } else {
-      return { start: undefined, end: undefined, text: undefined, length: undefined };
-    }
-  },
-
   // function for the replacement of the selected text
   replaceSelection: function (inputStr) {
     const textareaElement = this[0];
