@@ -77,9 +77,9 @@ jQuery.fn.extend({
       position = start + inputStr.length;
       textareaElement.setSelectionRange(position, position);
       textareaElement.scrollTop = mozScrollFix;
-      return this;
+      return [textareaElement];
     }
-    return this;
+    return [textareaElement];
   },
 
   //Set Selection in text
@@ -96,7 +96,7 @@ jQuery.fn.extend({
       }
     }
     if (endPosition < startPosition) {
-      return this;
+      return [textareaElement];
     }
     if (document.selection) {
       let number = 0;
@@ -130,16 +130,16 @@ jQuery.fn.extend({
         endPosition = endPosition + plusEnd;
         textareaElement.selectionStart = startPosition;
         textareaElement.selectionEnd = endPosition;
-        return this;
+        return [textareaElement];
       } else {
-        return this;
+        return [textareaElement];
       }
     } else if (textareaElement.selectionStart) {
       // MOZILLA support
       textareaElement.focus();
       textareaElement.selectionStart = startPosition;
       textareaElement.selectionEnd = endPosition;
-      return this;
+      return [textareaElement];
     }
   },
 
@@ -178,7 +178,7 @@ jQuery.fn.extend({
     if (document.selection && typeof textareaElement.selectionStart != 'number') {
       s = document.selection.createRange();
       if (s.text.length != 0) {
-        return this;
+        return [textareaElement];
       }
       re = textareaElement.createTextRange();
       textLength = re.text.length;
@@ -237,7 +237,7 @@ jQuery.fn.extend({
       s.text = inputStr;
       textareaElement.focus();
 
-      return this;
+      return [textareaElement];
     } else if (
       typeof textareaElement.selectionStart == 'number' && // MOZILLA support
       textareaElement.selectionStart == textareaElement.selectionEnd
@@ -248,9 +248,9 @@ jQuery.fn.extend({
       textareaElement.value = textareaElement.value.substr(0, start) + inputStr + textareaElement.value.substr(end);
       textareaElement.setSelectionRange(position, position);
       textareaElement.scrollTop = mozScrollFix;
-      return this;
+      return [textareaElement];
     }
-    return this;
+    return [textareaElement];
   },
 
   // Set caret position
@@ -264,7 +264,7 @@ jQuery.fn.extend({
     let w;
     textareaElement.focus();
     if (parseInt(inputStr) == 0) {
-      return this;
+      return [textareaElement];
     }
     //if (document.selection && typeof(input.selectionStart) == "number") {
     if (parseInt(inputStr) > 0) {
@@ -325,16 +325,16 @@ jQuery.fn.extend({
         inputStr = textareaElement.value.length + parseInt(inputStr);
       }
     } else {
-      return this;
+      return [textareaElement];
     }
     if (
       typeof textareaElement.selectionStart == 'number' && // MOZILLA support
       textareaElement.selectionStart == textareaElement.selectionEnd
     ) {
       textareaElement.setSelectionRange(inputStr, inputStr);
-      return this;
+      return [textareaElement];
     }
-    return this;
+    return [textareaElement];
   },
 
   countCharacters: function (str) {
