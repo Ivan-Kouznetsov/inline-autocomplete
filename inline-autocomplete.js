@@ -21,20 +21,21 @@ inlineAutocompleteState.Keys = {
 };
 inlineAutocompleteState.Focused = null;
 
-$.fn.inlineAutocomplete = function (suggests, options) {
+$.fn.inlineAutocomplete = function (
+  suggests,
+  options = {
+    delimiters: '\n ',
+    minChunkSize: 1,
+    cycleOnTab: true,
+    autoComplete: true,
+    endingSymbols: ' ',
+    stopSuggestionKeys: [inlineAutocompleteState.Keys.RETURN, inlineAutocompleteState.Keys.SPACE],
+    ignoreCase: false,
+  }
+) {
   return this.each(function () {
     $.makeSuggest(this, suggests, options);
   });
-};
-
-$.fn.inlineAutocomplete.defaults = {
-  delimiters: '\n ',
-  minChunkSize: 1,
-  cycleOnTab: true,
-  autoComplete: true,
-  endingSymbols: ' ',
-  stopSuggestionKeys: [inlineAutocompleteState.Keys.RETURN, inlineAutocompleteState.Keys.SPACE],
-  ignoreCase: false,
 };
 
 /* Make suggest:
@@ -47,8 +48,6 @@ $.fn.inlineAutocomplete.defaults = {
  * @param options: The options object
  */
 $.makeSuggest = function (area, suggests, options) {
-  options = $.extend({}, $.fn.inlineAutocomplete.defaults, options);
-
   var KEY = inlineAutocompleteState.Keys,
     $area = $(area);
   $area.suggests = suggests;
