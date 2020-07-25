@@ -1,5 +1,3 @@
-let caretPositionAmp;
-
 const textareaUtil = {
   getSelection: (textareaElement) => ({
     start: textareaElement.selectionStart,
@@ -84,8 +82,6 @@ const textareaUtil = {
     let position;
     let mozScrollFix = textareaElement.scrollTop == undefined ? 0 : textareaElement.scrollTop;
     textareaElement.focus();
-
-    caretPositionAmp = parseInt(caretPositionAmp);
 
     if (
       typeof textareaElement.selectionStart == 'number' && // MOZILLA support
