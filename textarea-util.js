@@ -9,18 +9,15 @@ const textareaUtil = {
   }),
 
   replaceSelection: (textareaElement, inputStr) => {
-    let start;
-    let end;
-    let position = 0;
-    let mozScrollFix = textareaElement.scrollTop == undefined ? 0 : textareaElement.scrollTop;
+    const mozScrollFix = textareaElement.scrollTop == undefined ? 0 : textareaElement.scrollTop;
     if (
       typeof textareaElement.selectionStart == 'number' && // MOZILLA support
       textareaElement.selectionStart != textareaElement.selectionEnd
     ) {
-      start = textareaElement.selectionStart;
-      end = textareaElement.selectionEnd;
+      const start = textareaElement.selectionStart;
+      const end = textareaElement.selectionEnd;
       textareaElement.value = textareaElement.value.substr(0, start) + inputStr + textareaElement.value.substr(end);
-      position = start + inputStr.length;
+      const position = start + inputStr.length;
       textareaElement.setSelectionRange(position, position);
       textareaElement.scrollTop = mozScrollFix;
       return [textareaElement];
