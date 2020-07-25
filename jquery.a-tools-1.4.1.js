@@ -159,7 +159,7 @@ jQuery.fn.extend({
     textareaElement.focus();
     if (document.selection && typeof textareaElement.selectionStart != 'number') {
       if (textareaElement.value.match(/\n/g) != null) {
-        number = textareaElement.value.match(/\n/g).length; // number of EOL simbols
+        number = textareaElement.value.match(/\n/g).length; // number of EOL symbols
       }
       point = parseInt(caretPositionAmp);
       if (number > 0) {
@@ -275,7 +275,7 @@ jQuery.fn.extend({
         textareaElement.selectionStart == textareaElement.selectionEnd
       ) {
         if (textareaElement.value.match(/\n/g) != null) {
-          number = textareaElement.value.match(/\n/g).length; // number of EOL simbols
+          number = textareaElement.value.match(/\n/g).length; // number of EOL symbols
         }
         if (number > 0) {
           for (let i = 0; i <= number; i++) {
@@ -292,7 +292,7 @@ jQuery.fn.extend({
       if (document.selection && typeof textareaElement.selectionStart != 'number') {
         inputStr = textareaElement.value.length + parseInt(inputStr);
         if (textareaElement.value.match(/\n/g) != null) {
-          number = textareaElement.value.match(/\n/g).length; // number of EOL simbols
+          number = textareaElement.value.match(/\n/g).length; // number of EOL symbols
         }
         if (number > 0) {
           for (let i = 0; i <= number; i++) {
@@ -308,7 +308,7 @@ jQuery.fn.extend({
       } else if (document.selection && typeof textareaElement.selectionStart == 'number') {
         inputStr = textareaElement.value.length + parseInt(inputStr);
         if (textareaElement.value.match(/\n/g) != null) {
-          number = textareaElement.value.match(/\n/g).length; // number of EOL simbols
+          number = textareaElement.value.match(/\n/g).length; // number of EOL symbols
         }
         if (number > 0) {
           inputStr = parseInt(inputStr) - number;
