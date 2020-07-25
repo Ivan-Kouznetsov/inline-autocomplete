@@ -138,7 +138,7 @@
         if (textareaUtil.getSelection($area[0]).text === '') {
           $area.insertAtCaretPos(completion);
         } else {
-          $area.replaceSelection(completion);
+          textareaUtil.replaceSelection($area[0], completion);
         }
         $area.setSelection(_selectionStart, _selectionEnd);
       }
@@ -163,7 +163,7 @@
         // apply suggestion. Clean up selection and insert a space
         var _selectionEnd = textareaUtil.getSelection($area[0]).end + $area.options.endingSymbols.length;
         var _text = textareaUtil.getSelection($area[0]).text + $area.options.endingSymbols;
-        $area.replaceSelection(_text);
+        textareaUtil.replaceSelection($area[0], _text);
         $area.setSelection(_selectionEnd, _selectionEnd);
         e.preventDefault();
         e.stopPropagation();
@@ -193,7 +193,7 @@
         case KEY.LEFT:
         case KEY.RIGHT:
           if (!hasSpecialKeysOrShift && $area.options.autoComplete) {
-            $area.replaceSelection('');
+            textareaUtil.replaceSelection($area[0], '');
           }
           break;
         default:

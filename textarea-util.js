@@ -7,12 +7,8 @@ const textareaUtil = {
     text: textareaElement.value.substring(textareaElement.selectionStart, textareaElement.selectionEnd),
     length: textareaElement.selectionEnd - textareaElement.selectionStart,
   }),
-};
 
-jQuery.fn.extend({
-  // function for the replacement of the selected text
-  replaceSelection: function (inputStr) {
-    const textareaElement = this[0];
+  replaceSelection: (textareaElement, inputStr) => {
     let start;
     let end;
     let position = 0;
@@ -31,6 +27,10 @@ jQuery.fn.extend({
     }
     return [textareaElement];
   },
+};
+
+jQuery.fn.extend({
+  // function for the replacement of the selected text
 
   //Set Selection in text
   setSelection: function (startPosition, endPosition) {
