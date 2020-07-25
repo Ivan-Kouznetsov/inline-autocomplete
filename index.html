@@ -4,14 +4,13 @@
     <meta charset="utf-8" />
     <title>Inline Autocomplete</title>
 
-    <script src="textarea-util.js"></script>
     <script src="inline-autocomplete.js"></script>
   </head>
 
   <body id="home">
     <textarea id="textarea1"></textarea>
     <script>
-      applyInlineAutocomplete(document.getElementById('textarea1'), ['hello', 'world']);
+      InlineAutocomplete.apply(document.getElementById('textarea1'), ['hello world', 'bye world']);
     </script>
   </body>
 </html>
