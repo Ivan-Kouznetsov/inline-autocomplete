@@ -18,7 +18,7 @@ const InlineAutocomplete = {
     BACKSPACE: 8,
     SPACE: 32,
   },
-  apply: function (
+  apply: (
     area,
     suggests,
     options = {
@@ -30,7 +30,7 @@ const InlineAutocomplete = {
       stopSuggestionKeys: [InlineAutocomplete.Keys.RETURN, InlineAutocomplete.Keys.SPACE],
       ignoreCase: false,
     }
-  ) {
+  ) => {
     const textareaUtil = {
       getSelection: (textareaElement) => ({
         start: textareaElement.selectionStart,
