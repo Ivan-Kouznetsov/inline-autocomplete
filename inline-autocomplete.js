@@ -35,14 +35,14 @@ applyInlineAutocomplete = function (
   }
 ) {
   const KEY = inlineAutocompleteState.Keys;
-  const $area = $(area);
-  $area.suggests = suggests;
-  $area.options = options;
+  const currentArea = area;
+  currentArea.suggests = suggests;
+  currentArea.options = options;
 
   /* Internal method: get the chunk of text before the cursor */
-  $area.getChunk = function () {
+  currentArea.getChunk = function () {
     var delimiters = this.options.delimiters.split(''), // array of chars
-      textBeforeCursor = this.val().substr(0, textareaUtil.getSelection(this[0]).start),
+      textBeforeCursor = this.value.substr(0, textareaUtil.getSelection(this).start),
       indexOfDelimiter = -1,
       i,
       d,
@@ -64,9 +64,9 @@ applyInlineAutocomplete = function (
   /* Internal method: get completion.
    * If performCycle is true then analyze getChunk() and and getSelection()
    */
-  $area.getCompletion = function (performCycle) {
+  currentArea.getCompletion = function (performCycle) {
     var text = this.getChunk(),
-      selectionText = textareaUtil.getSelection(this[0]).text,
+      selectionText = textareaUtil.getSelection(this).text,
       suggests = this.suggests,
       foundAlreadySelectedValue = false,
       firstMatchedValue = null,
@@ -75,7 +75,7 @@ applyInlineAutocomplete = function (
     // search the variant
     for (i = 0; i < suggests.length; i++) {
       suggest = suggests[i];
-      if ($area.options.ignoreCase) {
+      if (currentArea.options.ignoreCase) {
         suggest = suggest.toLowerCase();
         text = text.toLowerCase();
       }
@@ -101,49 +101,54 @@ applyInlineAutocomplete = function (
     }
   };
 
-  $area.updateSelection = function (completion) {
+  currentArea.updateSelection = function (completion) {
     if (completion) {
-      var _selectionStart = textareaUtil.getSelection($area[0]).start,
+      var _selectionStart = textareaUtil.getSelection(currentArea).start,
         _selectionEnd = _selectionStart + completion.length;
-      if (textareaUtil.getSelection($area[0]).text === '') {
-        textareaUtil.insertAtCaretPos($area[0], completion);
+      if (textareaUtil.getSelection(currentArea).text === '') {
+        textareaUtil.insertAtCaretPos(currentArea, completion);
       } else {
-        textareaUtil.replaceSelection($area[0], completion);
+        textareaUtil.replaceSelection(currentArea, completion);
       }
-      textareaUtil.setSelection($area[0], _selectionStart, _selectionEnd);
+      textareaUtil.setSelection(currentArea, _selectionStart, _selectionEnd);
     }
   };
 
-  $area.unbind('keydown.inlineAutocomplete').bind('keydown.inlineAutocomplete', function (e) {
+  const onKeydown = function (e) {
     if (e.keyCode === KEY.TAB) {
-      if ($area.options.cycleOnTab) {
-        var chunk = $area.getChunk();
-        if (chunk.length >= $area.options.minChunkSize) {
-          $area.updateSelection($area.getCompletion(true));
+      if (currentArea.options.cycleOnTab) {
+        var chunk = currentArea.getChunk();
+        if (chunk.length >= currentArea.options.minChunkSize) {
+          currentArea.updateSelection(currentArea.getCompletion(true));
         }
         e.preventDefault();
         e.stopPropagation();
-        $area.focus();
+        currentArea.focus();
         inlineAutocompleteState.Focused = this;
         return false;
       }
     }
     // Check for conditions to stop suggestion
-    if (textareaUtil.getSelection($area[0]).length && $.inArray(e.keyCode, $area.options.stopSuggestionKeys) !== -1) {
+    if (
+      textareaUtil.getSelection(currentArea).length &&
+      currentArea.options.stopSuggestionKeys.indexOf(e.keyCode) !== -1
+    ) {
       // apply suggestion. Clean up selection and insert a space
-      var _selectionEnd = textareaUtil.getSelection($area[0]).end + $area.options.endingSymbols.length;
-      var _text = textareaUtil.getSelection($area[0]).text + $area.options.endingSymbols;
-      textareaUtil.replaceSelection($area[0], _text);
-      textareaUtil.setSelection($area[0], _selectionEnd, _selectionEnd);
+      var _selectionEnd = textareaUtil.getSelection(currentArea).end + currentArea.options.endingSymbols.length;
+      var _text = textareaUtil.getSelection(currentArea).text + currentArea.options.endingSymbols;
+      textareaUtil.replaceSelection(currentArea, _text);
+      textareaUtil.setSelection(currentArea, _selectionEnd, _selectionEnd);
       e.preventDefault();
       e.stopPropagation();
       this.focus();
       inlineAutocompleteState.Focused = this;
       return false;
     }
-  });
+  };
 
-  $area.unbind('keyup.inlineAutocomplete').bind('keyup.inlineAutocomplete', function (e) {
+  currentArea.removeEventListener('keydown', onKeydown);
+  currentArea.addEventListener('keydown', onKeydown);
+  const onKeyup = function (e) {
     var hasSpecialKeys = e.altKey || e.metaKey || e.ctrlKey,
       hasSpecialKeysOrShift = hasSpecialKeys || e.shiftKey;
     switch (e.keyCode) {
@@ -152,7 +157,7 @@ applyInlineAutocomplete = function (
       case KEY.CTRL:
       case KEY.ALT:
       case KEY.TAB:
-        if (!hasSpecialKeysOrShift && $area.options.cycleOnTab) {
+        if (!hasSpecialKeysOrShift && currentArea.options.cycleOnTab) {
           break;
         }
       case KEY.ESC:
@@ -162,19 +167,22 @@ applyInlineAutocomplete = function (
       case KEY.DOWN:
       case KEY.LEFT:
       case KEY.RIGHT:
-        if (!hasSpecialKeysOrShift && $area.options.autoComplete) {
-          textareaUtil.replaceSelection($area[0], '');
+        if (!hasSpecialKeysOrShift && currentArea.options.autoComplete) {
+          textareaUtil.replaceSelection(currentArea, '');
         }
         break;
       default:
-        if (!hasSpecialKeys && $area.options.autoComplete) {
-          var chunk = $area.getChunk();
-          if (chunk.length >= $area.options.minChunkSize) {
-            $area.updateSelection($area.getCompletion(false));
+        if (!hasSpecialKeys && currentArea.options.autoComplete) {
+          var chunk = currentArea.getChunk();
+          if (chunk.length >= currentArea.options.minChunkSize) {
+            currentArea.updateSelection(currentArea.getCompletion(false));
           }
         }
         break;
     }
-  });
-  return $area;
+  };
+
+  currentArea.removeEventListener('keyup', onKeyup);
+  currentArea.addEventListener('keyup', onKeyup);
+  return currentArea;
 };
