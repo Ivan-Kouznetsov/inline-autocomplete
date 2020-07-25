@@ -1,4 +1,4 @@
-let inlineAutocompleteState = {};
+const inlineAutocompleteState = {};
 
 inlineAutocompleteState.Keys = {
   UNKNOWN: 0,
