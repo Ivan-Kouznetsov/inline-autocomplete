@@ -24,17 +24,11 @@ const textareaUtil = {
     }
     return [textareaElement];
   },
-};
 
-jQuery.fn.extend({
-  // function for the replacement of the selected text
-
-  //Set Selection in text
-  setSelection: function (startPosition, endPosition) {
+  setSelection: function (textareaElement, startPosition, endPosition) {
     startPosition = parseInt(startPosition);
     endPosition = parseInt(endPosition);
 
-    const textareaElement = this[0];
     textareaElement.focus();
     if (typeof textareaElement.selectionStart != 'number') {
       re = textareaElement.createTextRange();
@@ -89,7 +83,9 @@ jQuery.fn.extend({
       return [textareaElement];
     }
   },
+};
 
+jQuery.fn.extend({
   // insert text at current caret position
   insertAtCaretPos: function (inputStr) {
     const textareaElement = this[0];

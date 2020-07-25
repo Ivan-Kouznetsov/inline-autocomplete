@@ -140,7 +140,7 @@
         } else {
           textareaUtil.replaceSelection($area[0], completion);
         }
-        $area.setSelection(_selectionStart, _selectionEnd);
+        textareaUtil.setSelection($area[0], _selectionStart, _selectionEnd);
       }
     };
 
@@ -164,7 +164,7 @@
         var _selectionEnd = textareaUtil.getSelection($area[0]).end + $area.options.endingSymbols.length;
         var _text = textareaUtil.getSelection($area[0]).text + $area.options.endingSymbols;
         textareaUtil.replaceSelection($area[0], _text);
-        $area.setSelection(_selectionEnd, _selectionEnd);
+        textareaUtil.setSelection($area[0], _selectionEnd, _selectionEnd);
         e.preventDefault();
         e.stopPropagation();
         this.focus();
