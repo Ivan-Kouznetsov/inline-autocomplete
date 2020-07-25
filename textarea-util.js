@@ -25,9 +25,9 @@ const textareaUtil = {
     return [textareaElement];
   },
 
-  setSelection: (textareaElement, startPosition, endPosition) => {
-    startPosition = parseInt(startPosition);
-    endPosition = parseInt(endPosition);
+  setSelection: (textareaElement, startPositionStr, endPositionStr) => {
+    const startPosition = parseInt(startPositionStr);
+    const endPosition = parseInt(endPositionStr);
 
     textareaElement.focus();
 
