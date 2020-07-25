@@ -21,7 +21,8 @@ inlineAutocompleteState.Keys = {
 };
 inlineAutocompleteState.Focused = null;
 
-$.fn.inlineAutocomplete = function (
+applyInlineAutocomplete = function (
+  area,
   suggests,
   options = {
     delimiters: '\n ',
@@ -33,23 +34,8 @@ $.fn.inlineAutocomplete = function (
     ignoreCase: false,
   }
 ) {
-  return this.each(function () {
-    $.makeSuggest(this, suggests, options);
-  });
-};
-
-/* Make suggest:
- *
- * create and return jQuery object on the top of DOM object
- * and store suggests as part of this object
- *
- * @param area: HTML DOM element to add suggests to
- * @param suggests: The array of suggest strings
- * @param options: The options object
- */
-$.makeSuggest = function (area, suggests, options) {
-  var KEY = inlineAutocompleteState.Keys,
-    $area = $(area);
+  const KEY = inlineAutocompleteState.Keys;
+  const $area = $(area);
   $area.suggests = suggests;
   $area.options = options;
 
