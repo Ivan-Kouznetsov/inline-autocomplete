@@ -1,5 +1,5 @@
 (function ($) {
-  $.asuggestKeys = {
+  $.inlineAutocompleteKeys = {
     UNKNOWN: 0,
     SHIFT: 16,
     CTRL: 17,
@@ -18,21 +18,21 @@
     BACKSPACE: 8,
     SPACE: 32,
   };
-  $.asuggestFocused = null;
+  $.inlineAutocompleteFocused = null;
 
-  $.fn.asuggest = function (suggests, options) {
+  $.fn.inlineAutocomplete = function (suggests, options) {
     return this.each(function () {
       $.makeSuggest(this, suggests, options);
     });
   };
 
-  $.fn.asuggest.defaults = {
+  $.fn.inlineAutocomplete.defaults = {
     delimiters: '\n ',
     minChunkSize: 1,
     cycleOnTab: true,
     autoComplete: true,
     endingSymbols: ' ',
-    stopSuggestionKeys: [$.asuggestKeys.RETURN, $.asuggestKeys.SPACE],
+    stopSuggestionKeys: [$.inlineAutocompleteKeys.RETURN, $.inlineAutocompleteKeys.SPACE],
     ignoreCase: false,
   };
 
@@ -46,9 +46,9 @@
    * @param options: The options object
    */
   $.makeSuggest = function (area, suggests, options) {
-    options = $.extend({}, $.fn.asuggest.defaults, options);
+    options = $.extend({}, $.fn.inlineAutocomplete.defaults, options);
 
-    var KEY = $.asuggestKeys,
+    var KEY = $.inlineAutocompleteKeys,
       $area = $(area);
     $area.suggests = suggests;
     $area.options = options;
@@ -128,7 +128,7 @@
       }
     };
 
-    $area.unbind('keydown.asuggest').bind('keydown.asuggest', function (e) {
+    $area.unbind('keydown.inlineAutocomplete').bind('keydown.inlineAutocomplete', function (e) {
       if (e.keyCode === KEY.TAB) {
         if ($area.options.cycleOnTab) {
           var chunk = $area.getChunk();
@@ -138,7 +138,7 @@
           e.preventDefault();
           e.stopPropagation();
           $area.focus();
-          $.asuggestFocused = this;
+          $.inlineAutocompleteFocused = this;
           return false;
         }
       }
@@ -152,12 +152,12 @@
         e.preventDefault();
         e.stopPropagation();
         this.focus();
-        $.asuggestFocused = this;
+        $.inlineAutocompleteFocused = this;
         return false;
       }
     });
 
-    $area.unbind('keyup.asuggest').bind('keyup.asuggest', function (e) {
+    $area.unbind('keyup.inlineAutocomplete').bind('keyup.inlineAutocomplete', function (e) {
       var hasSpecialKeys = e.altKey || e.metaKey || e.ctrlKey,
         hasSpecialKeysOrShift = hasSpecialKeys || e.shiftKey;
       switch (e.keyCode) {
